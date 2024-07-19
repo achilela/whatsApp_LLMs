@@ -12,7 +12,7 @@ def process_flow(leak, damage, equipment_type, sub_equipment_type, low_risk, thi
                 return "<h4 style='font-size:14px; font-family:Tw Cen MT;'>Acceptable (NC)</h4>"
             elif thickness_available:
                 if acceptable_remaining_life:
-                    return "<h4 style='font-size:14px; font-family:Tw Cen MT;'>Acceptable</h4>"
+                    return "<h4 style='font-size:14px; font-family:Tw Cen MT;'>Acceptable (NC)</h4>"
                 elif not_acceptable_remaining_life:
                     return "<h4 style='font-size:14px; font-family:Tw Cen MT;'>Use NI Tool</h4>"
             else:
