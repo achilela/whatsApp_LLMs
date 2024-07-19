@@ -29,6 +29,8 @@ damage = st.sidebar.checkbox("Damage?")
  
 if damage:
     equipment_type = st.sidebar.selectbox("Equipment Type", ["Non-pressure", "Pressure"])
+    elif Non-pressure:
+          equipment_type = st.sidebar.selectbox("Equipment Type", ["Jacket", "Lifting heavy", "Lifting secondary", "Main beam-col",:"Main beam-col"])
 else:
     equipment_type = None
  
