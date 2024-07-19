@@ -30,14 +30,14 @@ damage = st.sidebar.checkbox("Damage?", disabled=leak)
 equipment_type = None
 sub_equipment_type = None
 
-if damage:
-    equipment_type = st.sidebar.selectbox("Equipment Type", ["Non-pressure", "Pressure"])
+if damage and not leak:
+    equipment_type = st.sidebar.selectbox("Equipment Type", ["Non-pressure", "Pressure"], disabled=leak)
     if equipment_type == "Non-pressure":
-        sub_equipment_type = st.sidebar.selectbox("Sub-Equipment Type", ["Jacket", "Lifting heavy", "Lifting secondary", "Main beam-col"])
+        sub_equipment_type = st.sidebar.selectbox("Sub-Equipment Type", ["Jacket", "Lifting heavy", "Lifting secondary", "Main beam-col"], disabled=leak)
 
-low_risk = st.sidebar.checkbox("Low Risk Fluid and No Rupture?") if damage and equipment_type == "Pressure" else False
-thickness_available = st.sidebar.checkbox("Thickness Available?") if damage and equipment_type == "Pressure" and not low_risk else False
-remaining_life = st.sidebar.checkbox("Acceptable Remaining Life (T > T_req before next inspection)?") if damage and equipment_type == "Pressure" and thickness_available else False
+low_risk = st.sidebar.checkbox("Low Risk Fluid and No Rupture?") if damage and equipment_type == "Pressure" and not leak else False
+thickness_available = st.sidebar.checkbox("Thickness Available?") if damage and equipment_type == "Pressure" and not low_risk and not leak else False
+remaining_life = st.sidebar.checkbox("Acceptable Remaining Life (T > T_req before next inspection)?") if damage and equipment_type == "Pressure" and thickness_available and not leak else False
 
 # Process the inputs and display the result
 result = process_flow(leak, damage, equipment_type, sub_equipment_type, low_risk, thickness_available, remaining_life)
