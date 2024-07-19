@@ -12,9 +12,9 @@ def process_flow(leak, damage, equipment_type, sub_equipment_type, low_risk, thi
                 return "<h4 style='font-size:14px; font-family:Tw Cen MT;'>Acceptable (NC)</h4>"
             elif thickness_available:
                 if acceptable_remaining_life:
-                    return "<h4 style='font-size:14px; font-family:Tw Cen MT;'>Use NI Tool</h4>"
+                    return "<h4 style='font-size:14px; font-family:Tw Cen MT;'>Acceptable</h4>"
                 elif not_acceptable_remaining_life:
-                    return "<h4 style='font-size:14px; font-family:Tw Cen MT;'>Not Acceptable</h4>"
+                    return "<h4 style='font-size:14px; font-family:Tw Cen MT;'>Use NI Tool</h4>"
             else:
                 return "<h4 style='font-size:14px; font-family:Tw Cen MT;'>Proceed with further Inspection</h4><p style='font-size:12px; font-family:Tw Cen MT;'>Detail steps based on GS-511...</p>"
     else:
@@ -37,8 +37,9 @@ if damage and not leak:
 
 low_risk = st.sidebar.checkbox("Low Risk Fluid and No Rupture?") if damage and equipment_type == "Pressure" and not leak else False
 thickness_available = st.sidebar.checkbox("Thickness Available?") if damage and equipment_type == "Pressure" and not low_risk and not leak else False
-acceptable_remaining_life = st.sidebar.checkbox("Acceptable Remaining Life (T > T_req before next inspection)?") if damage and equipment_type == "Pressure" and thickness_available and not leak else False
-not_acceptable_remaining_life = st.sidebar.checkbox("Not Acceptable Remaining Life (T < T_req before next inspection)?") if damage and equipment_type == "Pressure" and thickness_available and not leak else False
+
+acceptable_remaining_life = st.sidebar.checkbox("Acceptable Remaining Life (T > T_req before next inspection)?", disabled=not thickness_available or not damage or not equipment_type == "Pressure" or leak)
+not_acceptable_remaining_life = st.sidebar.checkbox("Not Acceptable Remaining Life (T < T_req before next inspection)?", disabled=not thickness_available or not damage or not equipment_type == "Pressure" or leak or acceptable_remaining_life)
 
 # Process the inputs and display the result
 result = process_flow(leak, damage, equipment_type, sub_equipment_type, low_risk, thickness_available, acceptable_remaining_life, not_acceptable_remaining_life)
