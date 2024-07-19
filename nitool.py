@@ -1,7 +1,7 @@
 import streamlit as st
 
 # Define the decision process
-def process_flow(leak, damage, equipment_type, sub_equipment_type, low_risk, thickness_available, remaining_life, t_req):
+def process_flow(leak, damage, equipment_type, sub_equipment_type, low_risk, thickness_available, acceptable_remaining_life, not_acceptable_remaining_life):
     if leak:
         return "<h4 style='font-size:14px; font-family:Tw Cen MT;'>Perform Temporary Repair (CR GR HSE 426)</h4>"
     elif damage:
@@ -11,9 +11,9 @@ def process_flow(leak, damage, equipment_type, sub_equipment_type, low_risk, thi
             if low_risk:
                 return "<h4 style='font-size:14px; font-family:Tw Cen MT;'>Acceptable (NC)</h4>"
             elif thickness_available:
-                if remaining_life >= t_req:
+                if acceptable_remaining_life:
                     return "<h4 style='font-size:14px; font-family:Tw Cen MT;'>Use NI Tool</h4>"
-                else:
+                elif not_acceptable_remaining_life:
                     return "<h4 style='font-size:14px; font-family:Tw Cen MT;'>Not Acceptable</h4>"
             else:
                 return "<h4 style='font-size:14px; font-family:Tw Cen MT;'>Proceed with further Inspection</h4><p style='font-size:12px; font-family:Tw Cen MT;'>Detail steps based on GS-511...</p>"
@@ -29,7 +29,6 @@ damage = st.sidebar.checkbox("Damage?", disabled=leak)
 
 equipment_type = None
 sub_equipment_type = None
-t_req = None
 
 if damage and not leak:
     equipment_type = st.sidebar.selectbox("Equipment Type", ["Non-pressure", "Pressure"], disabled=leak)
@@ -38,11 +37,11 @@ if damage and not leak:
 
 low_risk = st.sidebar.checkbox("Low Risk Fluid and No Rupture?") if damage and equipment_type == "Pressure" and not leak else False
 thickness_available = st.sidebar.checkbox("Thickness Available?") if damage and equipment_type == "Pressure" and not low_risk and not leak else False
-remaining_life = st.sidebar.number_input("Remaining Life (years)", min_value=0.0) if damage and equipment_type == "Pressure" and thickness_available and not leak else 0
-t_req = st.sidebar.number_input("T_req (years)", min_value=0.0) if damage and equipment_type == "Pressure" and thickness_available and not leak else 0
+acceptable_remaining_life = st.sidebar.checkbox("Acceptable Remaining Life (T > T_req before next inspection)?") if damage and equipment_type == "Pressure" and thickness_available and not leak else False
+not_acceptable_remaining_life = st.sidebar.checkbox("Not Acceptable Remaining Life (T < T_req before next inspection)?") if damage and equipment_type == "Pressure" and thickness_available and not leak else False
 
 # Process the inputs and display the result
-result = process_flow(leak, damage, equipment_type, sub_equipment_type, low_risk, thickness_available, remaining_life, t_req)
+result = process_flow(leak, damage, equipment_type, sub_equipment_type, low_risk, thickness_available, acceptable_remaining_life, not_acceptable_remaining_life)
 st.markdown(f"<div style='font-size:16px; font-family:Tw Cen MT;'>Decision: {result}</div>", unsafe_allow_html=True)
 
 # Chat input streamer - commented out
