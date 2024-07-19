@@ -1,7 +1,7 @@
 import streamlit as st
 
 # Define the decision process
-def process_flow(leak, damage, equipment_type, sub_equipment_type, low_risk, thickness_available, remaining_life):
+def process_flow(leak, damage, equipment_type, sub_equipment_type, low_risk, thickness_available, remaining_life, acceptable_remaining_life):
     if leak:
         return "<h4 style='font-size:14px; font-family:Tw Cen MT;'>Perform Temporary Repair (CR GR HSE 426)</h4>"
     elif damage:
@@ -11,7 +11,7 @@ def process_flow(leak, damage, equipment_type, sub_equipment_type, low_risk, thi
             if low_risk:
                 return "<h4 style='font-size:14px; font-family:Tw Cen MT;'>Acceptable (NC)</h4>"
             elif thickness_available:
-                if remaining_life:
+                if acceptable_remaining_life:
                     return "<h4 style='font-size:14px; font-family:Tw Cen MT;'>Use NI Tool</h4>"
                 else:
                     return "<h4 style='font-size:14px; font-family:Tw Cen MT;'>Not Acceptable</h4>"
@@ -37,10 +37,10 @@ if damage and not leak:
 
 low_risk = st.sidebar.checkbox("Low Risk Fluid and No Rupture?") if damage and equipment_type == "Pressure" and not leak else False
 thickness_available = st.sidebar.checkbox("Thickness Available?") if damage and equipment_type == "Pressure" and not low_risk and not leak else False
-remaining_life = st.sidebar.checkbox("Acceptable Remaining Life (T > T_req before next inspection)?") if damage and equipment_type == "Pressure" and thickness_available and not leak else False
+acceptable_remaining_life = st.sidebar.checkbox("Acceptable Remaining Life (T > T_req before next inspection)?") if damage and equipment_type == "Pressure" and thickness_available and not leak else False
 
 # Process the inputs and display the result
-result = process_flow(leak, damage, equipment_type, sub_equipment_type, low_risk, thickness_available, remaining_life)
+result = process_flow(leak, damage, equipment_type, sub_equipment_type, low_risk, thickness_available, acceptable_remaining_life, acceptable_remaining_life)
 st.markdown(f"<div style='font-size:16px; font-family:Tw Cen MT;'>Decision: {result}</div>", unsafe_allow_html=True)
 
 # Chat input streamer - commented out
