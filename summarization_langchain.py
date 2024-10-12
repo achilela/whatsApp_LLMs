@@ -1,9 +1,9 @@
 import warnings
 warnings.filterwarnings("ignore")
 
-!pip install --upgrade --quiet langchain
-!pip install --quiet langchain-community
-!pip install --upgrade --quiet langchain-together
+#!pip install --upgrade --quiet langchain
+#!pip install --quiet langchain-community
+#!pip install --upgrade --quiet langchain-together
 
 ## setting up the language model
 from langchain_together import ChatTogether
